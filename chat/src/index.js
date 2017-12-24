@@ -1,25 +1,32 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import thunk from 'redux-thunk';
-import {createStore,applyMiddleware,compose} from 'redux';
-import {Provider} from  'react-redux';
-import App from './App';
-import { counter} from './index.redux';
+import {createStore, applyMiddleware, compose} from 'redux';
+import {Provider} from 'react-redux';
+import {BrowserRouter, Route, Link, Redirect, Switch} from 'react-router-dom';
+
+
+import Auth from './Auth';
+import Dashboard from './Dashboard';
+import reducer from './reducer';
 //redux 异步，使用applyMiddleware和redux-thunk
 
-const reduxDevtools=window.devToolsExtension?window.devToolsExtension():()=>{};
-const store = createStore(counter,compose(
+const reduxDevtools = window.devToolsExtension ? window.devToolsExtension() : () => {};
+
+const store = createStore(reducer, compose(
     applyMiddleware(thunk),
     reduxDevtools
 ));
+ReactDOM.render(
+    (<Provider store={store}>
+        <BrowserRouter>
 
-// function render(){
-    ReactDOM.render(
-        (<Provider store={store}>
-            <App/>
-        </Provider>),
-        document.getElementById('root'));
-// }
+            <Switch>
+                <Route path='/login' component={Auth}></Route>
+                <Route path='/dashboard' component={Dashboard}></Route>
+                <Redirect to='/dashboard'/>
+            </Switch>
 
-// render();
-// store.subscribe(render);//订阅
+        </BrowserRouter>
+    </Provider>),
+    document.getElementById('root'));
