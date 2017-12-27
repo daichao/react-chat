@@ -21,6 +21,9 @@ const models={
 }
 
 for(let m in models){
+    console.log('--------');
+    console.log(models[m]);
+    console.log('--------');
     mongoose.model(m,new mongoose.Schema(models[m]))
 }
 

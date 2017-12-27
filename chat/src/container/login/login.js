@@ -1,29 +1,48 @@
-import React,{Component} from 'react';
-import Logo from "../../component/logo/logo";
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {List, WhiteSpace, InputItem, WingBlank, Button} from 'antd-mobile'
-class Login extends  Component{
-    constructor(props){
+import {Redirect} from 'react-router-dom';
+import {login} from '../../redux/user.redux'
+import Logo from "../../component/logo/logo";
+
+@connect(
+    state=>state.user,
+    {login}
+)
+class Login extends Component {
+    constructor(props) {
         super(props);
-        this.login=this.login.bind(this);
-        this.register=this.register.bind(this);
+        this.state = {
+            user: '',
+            pwd: ''
+        }
+        this.login = this.login.bind(this);
+        this.register = this.register.bind(this);
     }
 
-    login(){
-
+    login() {
+        this.props.login(this.state)
     }
-    register(){
+
+    handleChange(key, val) {
+        this.setState({[key]: val});
+    }
+
+    register() {
         this.props.history.push("/register")
     }
 
-    render(){
-        return(
+    render() {
+        return (
             <div>
+                {this.props.redirectTo?<Redirect to={this.props.redirectTo}/>:null}
                 <Logo/>
                 <WingBlank>
                     <List>
-                        <InputItem>用户</InputItem>
+                        {this.props.msg?<p className="err-msg">{this.props.msg}</p>:null}
+                        <InputItem onChange={v => this.handleChange('user', v)}>用户</InputItem>
                         <WhiteSpace/>
-                        <InputItem type="password">密码</InputItem>
+                        <InputItem type="password" onChange={v => this.handleChange('pwd', v)}>密码</InputItem>
                     </List>
                     <WhiteSpace/>
                     <Button type="primary" onClick={this.login}>登录</Button>
@@ -35,4 +54,4 @@ class Login extends  Component{
     }
 }
 
-export  default Login
+export default Login
