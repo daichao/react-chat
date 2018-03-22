@@ -3,14 +3,26 @@ import Boss from "../../component/boss/boss";
 import Genius from "../../component/genius/genius";
 import Msg from "../../component/msg/msg";
 import User from "../../component/user/user";
-import NavLinkBar from '../navlink/navlink';
+import NavLinkBar from "../navlink/navlink";
 import { connect } from "react-redux";
-import  {NavBar}  from "antd-mobile";
-import {Switch,Route} from 'react-router-dom';
-@connect(state => state)
+import { NavBar } from "antd-mobile";
+// import { Switch, Route } from "react-router-dom";
+import { getMsgList, recvMsg } from "../../redux/chat.redux";
+@connect(state => state, { getMsgList, recvMsg })
 class Dashboard extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: ""
+    };
+  }
+  componentDidMount() {
+    if (!this.props.chat.chatmsg.length) {
+      this.props.getMsgList();
+      this.props.recvMsg();
+    }
+  }
   render() {
-      
     const { pathname } = this.props.location;
     console.log(pathname);
     const user = this.props.user;
@@ -20,7 +32,7 @@ class Dashboard extends React.Component {
         text: "牛人",
         icon: "boss",
         title: "牛人列表",
-        component: Boss,
+        component: <Boss />,
         hide: user.type === "genius"
       },
       {
@@ -28,7 +40,7 @@ class Dashboard extends React.Component {
         text: "Boss",
         icon: "job",
         title: "Boss列表",
-        component: Genius,
+        component: <Genius />,
         hide: user.type === "boss"
       },
       {
@@ -36,22 +48,24 @@ class Dashboard extends React.Component {
         text: "消息",
         icon: "msg",
         title: "消息列表",
-        component: Msg
+        component: <Msg />
       },
       {
         path: "/me",
         text: "我",
         icon: "user",
         title: "个人中心",
-        component: User
+        component: <User />
       }
     ];
     return (
       <div>
-        <NavBar className='fixd-header'  mode="dard">
-          {navList.find(v => v.path === pathname).title}
+        <NavBar className="fixd-header" mode="dard">
+          {/*navList.find(v => v.path === pathname).title*/}
+          {this.state.title}
         </NavBar>
-        <div style={{marginTop:45}}>
+
+        {/*<div className='page-content'>
             <Switch>
             {navList.map(v=>(
                 <Route key={v.path} path={v.path} component={v.component}>
@@ -59,7 +73,12 @@ class Dashboard extends React.Component {
             ))}
             </Switch>
         </div>
-        <NavLinkBar data={navList}></NavLinkBar>
+          */}
+
+        <NavLinkBar
+          data={navList}
+          onPress={title => this.setState({ title })}
+        />
       </div>
     );
   }
