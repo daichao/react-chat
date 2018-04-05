@@ -2,10 +2,10 @@ import React from "react";
 import io from "socket.io-client";
 import { List, InputItem, NavBar, Icon, Grid } from "antd-mobile";
 import { connect } from "react-redux";
-import { getMsgList, sendMsg, recvMsg,readMsg } from "../../redux/chat.redux";
+import { getMsgList, sendMsg, recvMsg, readMsg } from "../../redux/chat.redux";
 import { getChatId } from "../../util";
 // const socket = io("ws://localhost:9093");
-@connect(state => state, { sendMsg, getMsgList, recvMsg,readMsg })
+@connect(state => state, { sendMsg, getMsgList, recvMsg, readMsg })
 class Chat extends React.Component {
   constructor(props) {
     super(props);
@@ -21,12 +21,11 @@ class Chat extends React.Component {
       this.props.getMsgList();
       this.props.recvMsg();
     }
-   
   }
-componentWillUnMount(){
-  const to=this.props.match.params.user;
-  this.props.readMsg(to);
-}
+  componentWillUnMount() {
+    const to = this.props.match.params.user;
+    this.props.readMsg(to);
+  }
   fixCarousel() {
     setTimeout(function() {
       window.dispatchEvent(new Event("resize"));
@@ -115,10 +114,10 @@ componentWillUnMount(){
               columnNum={9}
               carouselMaxRow={4}
               isCarousel={true}
-              onClick={(el)=>{
+              onClick={el => {
                 this.setState({
-                    text:this.state.text+el.text
-                })
+                  text: this.state.text + el.text
+                });
               }}
             />
           ) : null}

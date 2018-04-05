@@ -21,7 +21,7 @@ import Chat from "./component/chat/chat";
 
 const reduxDevtools = window.devToolsExtension
   ? window.devToolsExtension()
-  : f =>f;
+  : f => f;
 
 const store = createStore(
   reducers,
@@ -33,15 +33,13 @@ ReactDOM.render(
       <div>
         <AuthRoute />
         <Switch>
-          
           <Route path="/bossinfo" component={BossInfo} />
           <Route path="/geniusinfo" component={GeniusInfo} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
-          <Route path="/chat/:user" component={Chat}/>
-          <Route component={Dashboard} /> 
+          <Route path="/chat/:user" component={Chat} />
+          <Route component={Dashboard} />
         </Switch>
-        
       </div>
     </BrowserRouter>
   </Provider>,

@@ -28,7 +28,7 @@ export function chat(state = initState, action) {
         ).length
       };
     case MSG_RECV:
-    //只添加别人发给我的，我发出去的不算
+      //只添加别人发给我的，我发出去的不算
       const n = action.payload.to === action.payload.userId ? 1 : 0;
       return {
         ...state,
@@ -36,10 +36,14 @@ export function chat(state = initState, action) {
         unread: state.unread + n
       };
     case MSG_READ:
-    const {from,num}=action.payload;
-      return { ...state,
-        chatmsg:state.chatmsg.map(v=>({...v,read:from===v.from?true:v.read})),
-        unread:state.unread-num 
+      const { from, num } = action.payload;
+      return {
+        ...state,
+        chatmsg: state.chatmsg.map(v => ({
+          ...v,
+          read: from === v.from ? true : v.read
+        })),
+        unread: state.unread - num
       };
 
     default:
@@ -54,18 +58,18 @@ function msgList(msgs, users, userid) {
 function msgRecv(msg, userId) {
   return { type: MSG_RECV, payload: { msg, userId } };
 }
-function msgRead(from,userid,num){
-   return {type:MSG_READ,payload:{from,userid,num}};
+function msgRead(from, userid, num) {
+  return { type: MSG_READ, payload: { from, userid, num } };
 }
-export function readMsg(from){
-return (dispatch,getSate)=>{
-  axios.post('/user/readmsg',{from}).then(res=>{
-    const userid=getSate().user._id;
-    if(res.status===200&&res.data.code===0){
-      dispatch(msgRead({userid,from,num:res.data.num}))
-    }
-  })
-}
+export function readMsg(from) {
+  return (dispatch, getSate) => {
+    axios.post("/user/readmsg", { from }).then(res => {
+      const userid = getSate().user._id;
+      if (res.status === 200 && res.data.code === 0) {
+        dispatch(msgRead({ userid, from, num: res.data.num }));
+      }
+    });
+  };
 }
 export function recvMsg() {
   return (dispatch, getState) => {
